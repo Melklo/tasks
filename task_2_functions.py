@@ -3,7 +3,6 @@
 Функции, методы, тайпинги.
 '''
 
-from typing import Tuple, Optional, Union
 
 # Реализовать функцию, которая принимает строку и возвращает ее в обратном порядке.
 def reverse(string: str) -> str:
@@ -82,22 +81,32 @@ print(sort_type(a=34, b='some text', c=2, d=1.3, e={1: 2}, f=-3.0))
 # Вместо *index* должен быть подставлен неименованный параметр с индексом index. Должна поддерживаться
 # отрицательная индексация.
 # Вместо *name* должен быть подставлен именованный параметр с именем name.
-def function(text: str, *arg, **kwargs) -> str:
-    my_list = text.split("*")
-    for i in range(len(my_list)):
-        line = my_list[i]
-        if i % 2:
-            if not line:
-                my_list[i] = "*"
-            elif line in kwargs:
-                my_list[i] = str(kwargs[line])
-            else:
-                try:
-                    my_list[i] = str(arg[int(line)])
-                except (ValueError, IndexError):
-                    return "Wrong data!"
 
-    result = "".join(my_list)
-    return result
+def replacement(str_, *args, **kwargs):
+    st = str_.replace('**', '*')
+    one_word = st.split()
+    k = 0
+    for i in one_word:
+        if i[0] == i[-1]:
+            symbol = i[1:-1]
+            if symbol == "first":
+                one_word[k] = kwargs['first']
+            elif symbol == "second":
+                one_word[k] = kwargs['second']
+        k += 1
+
+    el = 0
+    for j in one_word:
+        if type(j) == str:
+            if j[0] == j[-1] and len(j) != 1:
+                index = int(j[1])
+                one_word[el] = args[index]
+        el += 1
+
+    result = [str(n) for n in one_word]
+    return " ".join(result)
 
 
+print(replacement('Some *first* string ** need to be formatted *2* *first* *second* *0* *2*', 111, 'string', '!!!',
+                  first=5,
+                  second=7, ))
